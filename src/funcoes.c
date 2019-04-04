@@ -1,7 +1,7 @@
 /*
 Alunos:
-  Gabriela Chaves de Moraes - 16/0006872
-  Lucas Penido Antunes - 16/0013143
+Gabriela Chaves de Moraes - 16/0006872
+Lucas Penido Antunes - 16/0013143
 */
 
 #include "funcoes.h"
@@ -139,7 +139,7 @@ aluno* preencheVetorAlunos(aluno *alunos, int qtdAlunos, FILE *arquivo){
       fgets(nomeSorteado, MAXNOME, arquivo);
       penultimo = strlen(nomeSorteado) - 1;
       if(nomeSorteado[penultimo] == '\n'){
-	       nomeSorteado[penultimo] = '\0';
+        nomeSorteado[penultimo] = '\0';
       }
     }
     rewind(arquivo);
@@ -148,16 +148,16 @@ aluno* preencheVetorAlunos(aluno *alunos, int qtdAlunos, FILE *arquivo){
       alunos[i].matricula = rand() % 1000000 + 1;
       status =  NREPETIDO;
       for (int aux = 0; (aux < i) && (status == NREPETIDO); aux++){
-            if (alunos[i].matricula == alunos[aux].matricula)
-               status = REPETIDO;
-         }
+        if (alunos[i].matricula == alunos[aux].matricula)
+        status = REPETIDO;
+      }
     }while (status == REPETIDO);
 
-     // tempAtual = ((clock()-inicio)/CLOCKS_PER_SEC);
-     // if (tempAtual != tempInit) {
-     //  printf("%.0f%%\n", ((double)i/(double)tamanho)*100);
-     //  tempInit = ((clock()-inicio)/CLOCKS_PER_SEC);
-     // }
+    // tempAtual = ((clock()-inicio)/CLOCKS_PER_SEC);
+    // if (tempAtual != tempInit) {
+    //  printf("%.0f%%\n", ((double)i/(double)tamanho)*100);
+    //  tempInit = ((clock()-inicio)/CLOCKS_PER_SEC);
+    // }
   }
   return alunos;
 }
@@ -208,4 +208,154 @@ int menuOperacao(){
   }while(operacao < 0 || operacao > 3);
 
   return operacao;
+}
+
+void copiaVetor(aluno alunoCopia[], aluno aluno[], int size) {
+  int i;
+  for(i = 0; i < size; i++)
+    alunoCopia[i] = aluno[i];
+}
+
+void bubble_sort_matricula(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int troca;
+
+  /* Enquanto houver trocas acontecendo o aluno não está ordenado */
+  do {
+    troca = 0;
+
+    for (int i = 1; i < size; i++) {
+      /* Faz a comparação do elemento da direita com o da esquerda.
+      Caso o da esquerda seja maior que o da direita, é feita a troca entre eles. */
+      if (aluno[i-1].matricula > aluno[i].matricula) {
+        aux[0] = aluno[i-1];
+        aluno[i-1] = aluno[i];
+        aluno[i] = aux[0];
+
+        troca = 1;
+      }
+    }
+    size--;
+  } while(troca);
+}
+
+void bubble_sort_ano_nascimento(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int troca;
+
+  /* Enquanto houver trocas acontecendo o aluno não está ordenado */
+  do {
+    troca = 0;
+
+    for (int i = 1; i < size; i++) {
+      /* Faz a comparação do elemento da direita com o da esquerda.
+      Caso o da esquerda seja maior que o da direita, é feita a troca entre eles. */
+      if (aluno[i-1].anoNascimento > aluno[i].anoNascimento) {
+        aux[0] = aluno[i-1];
+        aluno[i-1] = aluno[i];
+        aluno[i] = aux[0];
+
+        troca = 1;
+      }
+    }
+    size--;
+  } while(troca);
+}
+
+void selection_sort_matricula(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int min, flag = 0, nElements = size - 1;
+
+  /* O número de iterações vai depender do número de elementos no array - 1. */
+  while (nElements) {
+
+    /* Flag criada para marcar a primeira posição não ordenada.
+    E min é a posição do menor número. */
+    min = flag;
+
+    for (int i = flag; i < size; i++) {
+      if (aluno[i].matricula < aluno[min].matricula) {
+        min = i;
+      }
+    }
+    /* Faz a troca do menor número com o primeiro número não ordenado.  */
+    aux[0] = aluno[flag];
+    aluno[flag] = aluno[min];
+    aluno[min] = aux[0];
+
+    flag++;
+    nElements--;
+  }
+}
+
+void selection_sort_ano_nascimento(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int min, flag = 0, nElements = size - 1;
+
+  /* O número de iterações vai depender do número de elementos no array - 1. */
+  while (nElements) {
+
+    /* Flag criada para marcar a primeira posição não ordenada.
+    E min é a posição do menor número. */
+    min = flag;
+
+    for (int i = flag; i < size; i++) {
+      if (aluno[i].anoNascimento < aluno[min].anoNascimento) {
+        min = i;
+      }
+    }
+    /* Faz a troca do menor número com o primeiro número não ordenado.  */
+    aux[0] = aluno[flag];
+    aluno[flag] = aluno[min];
+    aluno[min] = aux[0];
+
+    flag++;
+    nElements--;
+  }
+}
+
+void insertion_sort_matricula(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int j;
+
+  for (int i = 1; i < size; i++) {
+    aux[0] = aluno[i];
+    j = i - 1;
+
+    while ((j >= 0) && (aluno[j].matricula > aux[0].matricula)) {
+      aluno[j + 1] = aluno[j];
+      j--;
+    }
+
+    aluno[j + 1] = aux[0];
+  }
+}
+
+void insertion_sort_ano_nascimento(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int j;
+
+  for (int i = 1; i < size; i++) {
+    aux[0] = aluno[i];
+    j = i - 1;
+
+    while ((j >= 0) && (aluno[j].anoNascimento > aux[0].anoNascimento)) {
+      aluno[j + 1] = aluno[j];
+      j--;
+    }
+
+    aluno[j + 1] = aux[0];
+  }
 }
