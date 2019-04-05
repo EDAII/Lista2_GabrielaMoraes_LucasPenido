@@ -216,6 +216,31 @@ void copiaVetor(aluno alunoCopia[], aluno aluno[], int size) {
     alunoCopia[i] = aluno[i];
 }
 
+void bubble_sort_nome(aluno *aluno, int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int troca;
+
+  /* Enquanto houver trocas acontecendo o aluno não está ordenado */
+  do {
+    troca = 0;
+
+    for (int i = 1; i < size; i++) {
+      /* Faz a comparação do elemento da direita com o da esquerda.
+      Caso o da esquerda seja maior que o da direita, é feita a troca entre eles. */
+      if (strcmp(aluno[i-1].nome, aluno[i].nome) > 0) {
+        aux[0] = aluno[i-1];
+        aluno[i-1] = aluno[i];
+        aluno[i] = aux[0];
+
+        troca = 1;
+      }
+    }
+    size--;
+  } while(troca);
+}
+
 void bubble_sort_matricula(aluno aluno[], int size) {
 
   struct Aluno *aux = NULL;
@@ -264,6 +289,34 @@ void bubble_sort_ano_nascimento(aluno aluno[], int size) {
     }
     size--;
   } while(troca);
+}
+
+void selection_sort_nome(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int min, flag = 0, nElements = size - 1;
+
+  /* O número de iterações vai depender do número de elementos no array - 1. */
+  while (nElements) {
+
+    /* Flag criada para marcar a primeira posição não ordenada.
+    E min é a posição do menor número. */
+    min = flag;
+
+    for (int i = flag; i < size; i++) {
+      if (strcmp(aluno[i].nome, aluno[min].nome) < 0) {
+        min = i;
+      }
+    }
+    /* Faz a troca do menor número com o primeiro número não ordenado.  */
+    aux[0] = aluno[flag];
+    aluno[flag] = aluno[min];
+    aluno[min] = aux[0];
+
+    flag++;
+    nElements--;
+  }
 }
 
 void selection_sort_matricula(aluno aluno[], int size) {
@@ -322,6 +375,26 @@ void selection_sort_ano_nascimento(aluno aluno[], int size) {
   }
 }
 
+void insertion_sort_nome(aluno aluno[], int size) {
+
+  struct Aluno *aux = NULL;
+  aux = alocaVetor(aux, 1);
+  int j;
+
+  for (int i = 1; i < size; i++) {
+    aux[0] = aluno[i];
+    j = i - 1;
+
+    while ((j >= 0) && ((strcmp(aluno[j].nome, aux[0].nome) > 0))) {
+      aluno[j + 1] = aluno[j];
+      j--;
+    }
+
+    aluno[j + 1] = aux[0];
+  }
+}
+
+
 void insertion_sort_matricula(aluno aluno[], int size) {
 
   struct Aluno *aux = NULL;
@@ -358,4 +431,39 @@ void insertion_sort_ano_nascimento(aluno aluno[], int size) {
 
     aluno[j + 1] = aux[0];
   }
+}
+
+aluno* insereRegistro(aluno *alunos, int qtdAlunos, FILE *arquivo, int novosRegistros){
+  int indiceNome, penultimo, status;
+  char nomeSorteado[MAXNOME];
+
+  alunos = (aluno*) realloc(alunos, ((qtdAlunos + novosRegistros) * sizeof(aluno)));
+
+  for(int i = 0; i < (qtdAlunos + novosRegistros); i++){
+    if(i >= qtdAlunos){
+      alunos[i].anoNascimento = rand() % 53 + 1949;
+
+      indiceNome = rand() % 1094;
+      for(int j = 0; j <= indiceNome; j++){
+        LIMPA_BUFFER;
+        fgets(nomeSorteado, MAXNOME, arquivo);
+        penultimo = strlen(nomeSorteado) - 1;
+        if(nomeSorteado[penultimo] == '\n'){
+          nomeSorteado[penultimo] = '\0';
+        }
+      }
+      rewind(arquivo);
+      strcpy(alunos[i].nome, nomeSorteado);
+
+      do{
+        alunos[i].matricula = rand() % 1000000 + 1;
+        status =  NREPETIDO;
+        for (int aux = 0; (aux < i) && (status == NREPETIDO); aux++){
+          if (alunos[i].matricula == alunos[aux].matricula)
+          status = REPETIDO;
+        }
+      }while (status == REPETIDO);
+    }
+  }
+  return alunos;
 }
