@@ -46,7 +46,7 @@ int main(){
         copiaVetor(alunosSelection, alunosBubble, qtdAlunos);
         imprimeRegistros(alunosBubble, qtdAlunos);
         novosRegistros = 0;
-        fprintf(arquivoHistorico,"%s\n", "Histórico de Versão");
+        fprintf(arquivoHistorico,"%s\n", "Histórico");
         fprintf(arquivoHistorico,"%s\t%s\t\t\t\t%s\t%s\t%s\n", "Tamanho","Tipo de Ordenação", "Bubble Sort", "Selection Sort", "Insertion Sort");
         do{
           criterioOrdenacao = escolheCriterioOrdenacao();
@@ -153,6 +153,7 @@ int main(){
           printf("\n\nFalha ao abrir o arquivo!");
           exit(0);
         }
+        printf("\n");
         while(!feof(arquivoHistorico)) {
           if(fgets(linha, 1000, arquivoHistorico) != NULL){
             printf("%s", linha);
